@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(open /Users/adrienmanville/Desktop/MendPlace/Validation/Waitlist-App/index.html)",
+      "Read(//Users/adrienmanville/Desktop/MendPlace/**)",
+      "Bash(cp /Users/adrienmanville/Desktop/MendPlace/Saves/mendplace_save_V3/assets/fonts/BricolageGrotesque-VariableFont.ttf /Users/adrienmanville/Desktop/MendPlace/Validation/Waitlist-App/assets/fonts/)",
+      "Bash(cp /Users/adrienmanville/Desktop/MendPlace/Saves/mendplace_save_V3/assets/fonts/Inter-VariableFont.ttf /Users/adrienmanville/Desktop/MendPlace/Validation/Waitlist-App/assets/fonts/)",
+      "Bash(cp \"/Users/adrienmanville/Desktop/MendPlace/assets/Logo_MendPlace_Main.png\" /Users/adrienmanville/Desktop/MendPlace/Validation/Waitlist-App/assets/images/)",
+      "Bash(cp \"/Users/adrienmanville/Desktop/MendPlace/assets/Logo_MendPlace_White.png\" /Users/adrienmanville/Desktop/MendPlace/Validation/Waitlist-App/assets/images/)",
+      "Bash(cp \"/Users/adrienmanville/Desktop/MendPlace/assets/Logo_MendPlace_Main.png\" /Users/adrienmanville/Desktop/MendPlace/Validation/Waitlist-App/assets/images/icon.png)",
+      "Bash(cp \"/Users/adrienmanville/Desktop/MendPlace/assets/Logo_MendPlace_Main.png\" /Users/adrienmanville/Desktop/MendPlace/Validation/Waitlist-App/assets/images/favicon.png)",
+      "Bash(cp \"/Users/adrienmanville/Desktop/MendPlace/Logo_MendPlace_Main.png\" /Users/adrienmanville/Desktop/MendPlace/Validation/Waitlist-App/assets/images/)",
+      "Bash(cp \"/Users/adrienmanville/Desktop/MendPlace/Logo_MendPlace_Main.png\" /Users/adrienmanville/Desktop/MendPlace/Validation/Waitlist-App/assets/images/icon.png)",
+      "Bash(cp \"/Users/adrienmanville/Desktop/MendPlace/Logo_MendPlace_Main.png\" /Users/adrienmanville/Desktop/MendPlace/Validation/Waitlist-App/assets/images/favicon.png)",
+      "Bash(cp \"/Users/adrienmanville/Desktop/MendPlace/Logo_MendPlace_White.png\" /Users/adrienmanville/Desktop/MendPlace/Validation/Waitlist-App/assets/images/ && echo \"All assets copied\")",
+      "Bash(npm view *)",
+      "Bash(python3 -c \"import sys,json; v=json.load\\(sys.stdin\\); print\\([x for x in v if x.startswith\\('1'\\)][-5:]\\)\")",
+      "Bash(python3 -c \"import sys,json; v=json.load\\(sys.stdin\\); print\\([x for x in v if x.startswith\\('14'\\)]\\)\")",
+      "WebFetch(domain:localhost)",
+      "Bash(npx tsc *)",
+      "Bash(python3 -c \"import sys,json; v=json.load\\(sys.stdin\\); print\\([x for x in v if x.startswith\\('15.'\\) and 'canary' not in x]\\)\")",
+      "Bash(pkill -f \"expo start\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(list\\(d.get\\('exports',{}\\).keys\\(\\)\\)[:30] if 'exports' in d else 'no exports'\\)\")",
+      "Bash(file /Users/adrienmanville/Desktop/MendPlace/Validation/Waitlist-App/assets/images/*.png)",
+      "Bash(awk '{print $1, $2, $3, $4, $5}')",
+      "Bash(identify /Users/adrienmanville/Desktop/MendPlace/Validation/Waitlist-App/assets/images/*.png)",
+      "Bash(python3 -c ' *)",
+      "Bash(xargs sed -i '' 's/mendplace\\\\.fr/mendplace.com/g')",
+      "Bash(sips -g pixelWidth -g pixelHeight /Users/adrienmanville/Desktop/MendPlace/Validation/Waitlist-App/assets/images/Social_MendPlace.png)",
+      "Bash(sips -g pixelWidth -g pixelHeight -g format /Users/adrienmanville/Desktop/MendPlace/Validation/Waitlist-App/public/Social_MendPlace.png)",
+      "Bash(curl -s -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdraXRuc3F1Y2xydG1xd2FoeHJ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4NDc3NDYsImV4cCI6MjA5NDQyMzc0Nn0.307F0hw2b9EVy_BBpAXUBTVl75A4z9Fu-SphBhXoVpE' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdraXRuc3F1Y2xydG1xd2FoeHJ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4NDc3NDYsImV4cCI6MjA5NDQyMzc0Nn0.307F0hw2b9EVy_BBpAXUBTVl75A4z9Fu-SphBhXoVpE' https://gkitnsquclrtmqwahxrx.supabase.co/rest/v1/waitlist?limit=1)",
+      "Bash(curl -s -X POST -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdraXRuc3F1Y2xydG1xd2FoeHJ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4NDc3NDYsImV4cCI6MjA5NDQyMzc0Nn0.307F0hw2b9EVy_BBpAXUBTVl75A4z9Fu-SphBhXoVpE' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdraXRuc3F1Y2xydG1xd2FoeHJ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4NDc3NDYsImV4cCI6MjA5NDQyMzc0Nn0.307F0hw2b9EVy_BBpAXUBTVl75A4z9Fu-SphBhXoVpE' -H 'Content-Type: application/json' -H 'Prefer: return=minimal' -d '{\"mode\":\"client\",\"first_name\":\"Test\",\"last_name\":\"MendPlace\",\"email\":\"test@mendplace.com\",\"q1\":\"Oui, une fois\",\"q2\":null,\"q3\":null,\"q4\":null,\"message\":null}' https://gkitnsquclrtmqwahxrx.supabase.co/rest/v1/waitlist)"
+    ],
+    "additionalDirectories": [
+      "/Users/adrienmanville/Desktop/MendPlace"
+    ]
+  }
+}

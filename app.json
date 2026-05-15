@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "MendPlace Waitlist",
+    "slug": "mendplace-waitlist",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/MendPlace_Site_Logo.png",
+    "scheme": "mendplace-waitlist",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#EEF0FB",
+        "foregroundImage": "./assets/images/MendPlace_Site_Logo.png"
+      }
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/MendPlace_Site_Logo.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#FAF8F4",
+          "resizeMode": "contain"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

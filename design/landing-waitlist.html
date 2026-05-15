@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MendPlace — Artisans vérifiés à Paris | Liste d'attente</title>
+<meta name="description" content="Marre de courir après un artisan ? MendPlace pré-vérifie les pros, sécurise le paiement, automatise la facture. Devis rapide à Paris. Rejoignez la waitlist.">
+<meta property="og:title" content="MendPlace — Le bon artisan, sans courir après.">
+<meta property="og:description" content="Devis rapide, paiement sécurisé, artisans vérifiés. Rejoignez la liste d'attente.">
+<style>
+@font-face{font-family:'BricolageGrotesque';src:url('../../fonts/BricolageGrotesque-VariableFont.ttf') format('truetype');font-weight:100 900}
+@font-face{font-family:'Inter';src:url('../../fonts/Inter-VariableFont.ttf') format('truetype');font-weight:100 900}
+
+:root{
+  --i50:#EEF0FB;--i100:#DDE1F4;--i200:#C7CCEE;--i400:#6366F1;--i700:#3730A3;--i950:#1E1B4B;
+  --t50:#FCEFE8;--t200:#F5C9B6;--t500:#E07856;--t700:#B5532E;
+  --s50:#FAF8F4;--s100:#F5F1EB;--s200:#E8E2D7;--s400:#B8AFA0;--s600:#6B6357;--s800:#3D3830;--s950:#1F1C18;
+  --ok:#2F8F6E;--okBg:#E8F4EE;--okDk:#1E5C46;
+  --err:#C73E3A;--errBg:#FAEAEA;
+  --w:#FFFFFF;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--s50);color:var(--s950);-webkit-font-smoothing:antialiased;line-height:1.55;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font-family:'Inter',sans-serif}
+img{display:block;max-width:100%}
+
+.container{max-width:1100px;margin:0 auto;padding:0 24px}
+@media(max-width:560px){.container{padding:0 18px}}
+
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--i700);background:var(--i50);padding:5px 12px;border-radius:999px;margin-bottom:18px}
+h1,h2,h3{font-family:'BricolageGrotesque',sans-serif;letter-spacing:-0.025em;line-height:1.05;color:var(--s950)}
+h1{font-size:clamp(40px,6vw,72px);font-weight:700}
+h2{font-size:clamp(28px,4vw,44px);font-weight:700;line-height:1.1}
+h3{font-size:20px;font-weight:600;line-height:1.25;letter-spacing:-0.01em}
+.lead{font-size:clamp(16px,1.6vw,19px);color:var(--s600);line-height:1.65;max-width:560px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;font-family:'Inter';font-weight:600;border-radius:11px;transition:all 180ms ease-out;white-space:nowrap;text-decoration:none}
+.btn-sm{padding:8px 14px;font-size:13px}
+.btn-md{padding:11px 20px;font-size:14px}
+.btn-lg{padding:15px 28px;font-size:16px}
+.btn-xl{padding:17px 32px;font-size:17px}
+.btn-primary{background:var(--i700);color:#fff;box-shadow:0 4px 12px rgba(55,48,163,0.18)}
+.btn-primary:hover{background:var(--i950);transform:translateY(-1px);box-shadow:0 6px 20px rgba(55,48,163,0.25)}
+.btn-accent{background:var(--t500);color:#fff;box-shadow:0 4px 12px rgba(224,120,86,0.22)}
+.btn-accent:hover{background:var(--t700);transform:translateY(-1px);box-shadow:0 6px 20px rgba(224,120,86,0.3)}
+.btn-ghost{background:transparent;color:var(--s800);border:1.5px solid var(--s200)}
+.btn-ghost:hover{background:var(--s100);border-color:var(--s400)}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(250,248,244,0.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--s200);transition:transform 280ms ease-out}
+nav.hidden{transform:translateY(-100%)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;gap:16px}
+.brand img{height:24px}
+.nav-spacer{flex:1}
+.nav-actions{display:flex;gap:8px}
+@media(max-width:520px){.nav-actions .btn{padding:7px 11px;font-size:12px}}
+
+/* Floating CTAs */
+.float-cta{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(120px);z-index:100;display:flex;gap:8px;padding:8px;background:rgba(31,28,24,0.92);backdrop-filter:blur(14px);border-radius:16px;border:1px solid rgba(255,255,255,0.08);box-shadow:0 12px 40px rgba(0,0,0,0.25);transition:transform 320ms cubic-bezier(.34,1.56,.64,1);max-width:calc(100% - 32px)}
+.float-cta.show{transform:translateX(-50%) translateY(0)}
+.float-cta .btn{flex:1;min-width:140px}
+@media(max-width:480px){.float-cta .btn{min-width:0;padding:11px 14px;font-size:13px}.float-cta .btn span{display:none}}
+
+/* Hero */
+.hero{padding:120px 0 80px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,var(--i100) 0%,transparent 45%),radial-gradient(circle at 10% 90%,var(--t50) 0%,transparent 40%);pointer-events:none}
+.hero-content{position:relative;text-align:center;max-width:820px;margin:0 auto}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--w);border:1px solid var(--s200);padding:6px 14px;border-radius:999px;font-size:13px;font-weight:500;color:var(--s800);margin-bottom:28px}
+.hero-eyebrow-dot{width:8px;height:8px;background:var(--t500);border-radius:50%;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.85)}}
+.hero h1{margin-bottom:24px}
+.hero h1 em{font-style:normal;color:var(--t500);position:relative;display:inline-block}
+.hero h1 em::after{content:'';position:absolute;left:0;right:0;bottom:8%;height:14%;background:var(--t50);z-index:-1;border-radius:4px}
+.hero-lead{margin:0 auto 36px;color:var(--s600);font-size:clamp(16px,1.6vw,19px);line-height:1.6;max-width:560px}
+.hero-lead strong{color:var(--s950);font-weight:600}
+.hero-form{max-width:480px;margin:0 auto}
+.email-form{display:flex;gap:8px;background:var(--w);border:2px solid var(--s200);border-radius:14px;padding:6px;transition:border-color 200ms,box-shadow 200ms}
+.email-form:focus-within{border-color:var(--i700);box-shadow:0 0 0 4px var(--i50)}
+.email-form input{flex:1;border:none;outline:none;padding:12px 14px;font-size:15px;color:var(--s950);background:transparent;min-width:0}
+.email-form .btn{flex-shrink:0}
+.hero-trust{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;margin-top:24px;font-size:13px;color:var(--s600)}
+.hero-trust-item{display:flex;align-items:center;gap:6px}
+.hero-trust-check{width:16px;height:16px;background:var(--okBg);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.hero-counter{margin-top:36px;display:inline-flex;align-items:center;gap:10px;font-size:13px;color:var(--s600)}
+.hero-counter-avatars{display:flex}
+.hero-counter-avatar{width:28px;height:28px;border-radius:50%;border:2px solid var(--s50);margin-left:-8px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
+.hero-counter-avatar:first-child{margin-left:0}
+.hero-counter strong{color:var(--s950);font-weight:700}
+
+/* App preview */
+.app-preview{margin:60px auto 0;max-width:380px;position:relative}
+.phone{background:var(--s950);border-radius:36px;padding:8px;box-shadow:0 30px 70px rgba(31,28,24,0.25),0 12px 30px rgba(31,28,24,0.15)}
+.phone-screen{background:var(--w);border-radius:28px;overflow:hidden;aspect-ratio:9/19}
+.phone-status{height:28px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 24px;font-size:11px;font-weight:600}
+.phone-content{padding:14px}
+.phone-card{background:var(--s50);border:1px solid var(--s200);border-radius:12px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.phone-avatar{width:32px;height:32px;border-radius:50%;background:var(--i50);color:var(--i700);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.phone-avatar.t{background:var(--t50);color:var(--t700)}
+.phone-name{font-size:11px;font-weight:600;line-height:1.3}
+.phone-meta{font-size:9px;color:var(--s600);margin-top:1px}
+.phone-badge{margin-left:auto;font-size:8px;font-weight:600;padding:2px 6px;border-radius:999px;background:var(--okBg);color:var(--okDk)}
+.phone-search{background:var(--s100);border-radius:10px;padding:10px 12px;font-size:11px;color:var(--s400);margin-bottom:10px}
+.phone-title{font-family:'BricolageGrotesque';font-size:14px;font-weight:700;margin-bottom:10px;letter-spacing:-0.01em}
+
+/* Sections */
+section{padding:80px 0;position:relative}
+@media(max-width:720px){section{padding:56px 0}}
+.section-head{text-align:center;max-width:680px;margin:0 auto 56px}
+.section-head .tag{margin-bottom:14px}
+.section-head h2{margin-bottom:14px}
+.section-head .lead{margin:0 auto;color:var(--s600)}
+
+/* Promises */
+.promises{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:48px}
+@media(max-width:760px){.promises{grid-template-columns:1fr}}
+.promise{background:#fff;border:1px solid var(--s200);border-radius:18px;padding:28px;display:flex;gap:20px;align-items:flex-start;transition:all 200ms}
+.promise:hover{border-color:var(--i200);transform:translateY(-2px)}
+.promise-num{font-family:'BricolageGrotesque';font-size:32px;font-weight:700;color:var(--i700);letter-spacing:-0.03em;line-height:1;flex-shrink:0;background:var(--i50);padding:10px 14px;border-radius:11px}
+.promise-content h3{margin-bottom:8px}
+.promise-content p{font-size:14px;color:var(--s600);line-height:1.65}
+
+/* Steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:48px}
+@media(max-width:760px){.steps{grid-template-columns:1fr}}
+.step{background:var(--w);border:1px solid var(--s200);border-radius:18px;padding:28px;position:relative;overflow:hidden;transition:transform 200ms,box-shadow 200ms}
+.step:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(31,28,24,0.08)}
+.step-num{position:absolute;top:-12px;right:14px;font-family:'BricolageGrotesque';font-size:96px;font-weight:700;letter-spacing:-0.04em;color:var(--s100);line-height:1}
+.step-ico{width:48px;height:48px;border-radius:12px;background:var(--i50);display:flex;align-items:center;justify-content:center;margin-bottom:18px;position:relative;z-index:1}
+.step h3{margin-bottom:10px;position:relative;z-index:1}
+.step p{font-size:14px;color:var(--s600);line-height:1.65;position:relative;z-index:1}
+.step-time{margin-top:14px;display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--i700);background:var(--i50);padding:4px 10px;border-radius:999px;position:relative;z-index:1}
+
+/* Pro section */
+.dark{background:var(--s950);color:#F5F1EB}
+.dark .tag{color:#C7CCEE;background:rgba(255,255,255,0.07)}
+.dark h1,.dark h2,.dark h3{color:#F5F1EB}
+.dark .lead{color:rgba(245,241,235,0.7)}
+.pro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:48px}
+@media(max-width:760px){.pro-grid{grid-template-columns:1fr}}
+.pro-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:28px;transition:all 200ms}
+.pro-card:hover{background:rgba(255,255,255,0.07);transform:translateY(-3px)}
+.pro-card h3{margin-bottom:12px}
+.pro-card p{font-size:14px;color:rgba(255,255,255,0.65);line-height:1.65}
+.pro-ico{width:44px;height:44px;border-radius:11px;background:rgba(224,120,86,0.15);color:var(--t500);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.pro-stat{font-family:'BricolageGrotesque';font-size:36px;font-weight:700;color:var(--t500);letter-spacing:-0.03em;line-height:1;margin-bottom:8px}
+.pro-cta{margin-top:48px;text-align:center}
+
+/* Trust */
+.trust-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:48px}
+@media(max-width:760px){.trust-grid{grid-template-columns:1fr}}
+.trust-card{background:#fff;border:1px solid var(--s200);border-radius:18px;padding:28px;display:flex;gap:18px;align-items:flex-start;transition:all 200ms}
+.trust-card:hover{border-color:var(--i200);transform:translateY(-2px)}
+.trust-ico{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.trust-card h3{margin-bottom:8px}
+.trust-card p{font-size:14px;color:var(--s600);line-height:1.65}
+
+/* FAQ */
+.faq{max-width:760px;margin:48px auto 0;background:#fff;border:1px solid var(--s200);border-radius:18px;overflow:hidden}
+.faq-item{border-bottom:1px solid var(--s200)}
+.faq-item:last-child{border-bottom:none}
+.faq-q{width:100%;display:flex;justify-content:space-between;align-items:center;padding:20px 24px;background:none;border:none;cursor:pointer;text-align:left;font-size:16px;font-weight:600;color:var(--s950);transition:background 150ms}
+.faq-q:hover{background:var(--s50)}
+.faq-q svg{transition:transform 250ms;flex-shrink:0;margin-left:14px}
+.faq-item.open .faq-q svg{transform:rotate(180deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height 300ms ease,padding 300ms ease;color:var(--s600);font-size:14px;line-height:1.7;padding:0 24px}
+.faq-item.open .faq-a{max-height:400px;padding:0 24px 22px}
+
+/* Final CTA */
+.final-cta{background:linear-gradient(135deg,var(--i700) 0%,var(--i950) 100%);color:#fff;text-align:center;padding:80px 0;position:relative;overflow:hidden}
+.final-cta::before{content:'';position:absolute;top:-50%;right:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(224,120,86,0.18) 0%,transparent 50%);pointer-events:none}
+.final-cta::after{content:'';position:absolute;bottom:-50%;left:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(99,102,241,0.18) 0%,transparent 50%);pointer-events:none}
+.final-cta>*{position:relative}
+.final-cta h2{color:#fff;margin-bottom:14px}
+.final-cta .lead{color:#C7CCEE;margin:0 auto 32px}
+.final-cta .email-form{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.15)}
+.final-cta .email-form:focus-within{border-color:var(--t500);box-shadow:0 0 0 4px rgba(224,120,86,0.2)}
+.final-cta .email-form input{color:#fff}
+.final-cta .email-form input::placeholder{color:rgba(255,255,255,0.5)}
+.final-cta-counter{margin-top:24px;font-size:13px;color:rgba(255,255,255,0.6)}
+.final-cta-counter strong{color:var(--t500);font-weight:700}
+
+/* Footer */
+footer{background:#0F0D0B;color:rgba(255,255,255,0.6);padding:40px 0 24px;font-size:13px}
+.footer-inner{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:center}
+.footer-left{display:flex;align-items:center;gap:14px}
+.footer-left img{height:20px;filter:brightness(0) invert(1) opacity(0.85)}
+.footer-links{display:flex;gap:18px;flex-wrap:wrap}
+.footer-links a:hover{color:#fff}
+.footer-social{display:flex;gap:8px}
+.footer-social a{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;transition:background 150ms}
+.footer-social a:hover{background:rgba(255,255,255,0.12)}
+.rgpd{margin-top:20px;font-size:11px;color:rgba(255,255,255,0.4);max-width:720px;line-height:1.6}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(31,28,24,0.7);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 250ms}
+.modal-bg.open{opacity:1;pointer-events:auto}
+.modal{background:#fff;border-radius:24px;width:100%;max-width:560px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;transform:translateY(20px) scale(0.96);transition:transform 320ms cubic-bezier(.34,1.56,.64,1)}
+.modal-bg.open .modal{transform:none}
+.modal-head{padding:24px 28px 0;display:flex;justify-content:space-between;align-items:flex-start}
+.modal-close{width:36px;height:36px;background:var(--s100);border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--s600);flex-shrink:0;transition:background 150ms}
+.modal-close:hover{background:var(--s200)}
+.modal-body{padding:0 28px 28px;overflow-y:auto}
+.modal-progress{display:flex;gap:5px;margin-bottom:24px;padding-top:8px}
+.modal-progress-step{flex:1;height:3px;background:var(--s200);border-radius:2px;transition:background 300ms}
+.modal-progress-step.done{background:var(--ok)}
+.modal-progress-step.active{background:var(--i700)}
+.modal h3.modal-title{font-size:24px;line-height:1.2;margin-bottom:10px}
+.modal-subtitle{font-size:14px;color:var(--s600);margin-bottom:22px;line-height:1.6}
+.modal-question{margin-bottom:22px}
+.modal-question-label{font-size:14px;font-weight:600;color:var(--s950);margin-bottom:10px;display:block}
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:480px){.opt-grid{grid-template-columns:1fr}}
+.opt{padding:12px 14px;border:1.5px solid var(--s200);background:#fff;border-radius:10px;cursor:pointer;font-size:14px;color:var(--s800);text-align:left;font-family:'Inter';display:flex;align-items:center;justify-content:space-between;gap:10px;transition:all 150ms}
+.opt:hover{border-color:var(--i200);background:var(--s50)}
+.opt.selected{border-color:var(--i700);background:var(--i50);color:var(--i700);font-weight:600}
+.opt .check{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--s200);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.opt.selected .check{background:var(--i700);border-color:var(--i700)}
+.modal input[type="text"],.modal textarea{width:100%;padding:12px 14px;border:1.5px solid var(--s200);border-radius:10px;font-size:14px;font-family:'Inter';outline:none;transition:border 150ms;color:var(--s950);background:#fff}
+.modal input[type="text"]:focus,.modal textarea:focus{border-color:var(--i700)}
+.modal textarea{min-height:90px;resize:vertical;line-height:1.5}
+.modal-footer{padding:18px 28px;border-top:1px solid var(--s200);background:var(--s50);display:flex;justify-content:space-between;gap:10px;align-items:center}
+.modal-step-hint{font-size:12px;color:var(--s600)}
+.success-screen{text-align:center;padding:40px 28px}
+.success-circle{width:64px;height:64px;background:var(--okBg);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+.success-screen h3{font-size:24px;margin-bottom:10px}
+.success-screen p{font-size:14px;color:var(--s600);line-height:1.6;max-width:380px;margin:0 auto}
+
+/* Reveal */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 700ms ease-out,transform 700ms ease-out}
+.reveal.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#top" class="brand"><img src="../../assets/Logo_MendPlace_Main.png" alt="MendPlace"></a>
+    <div class="nav-spacer"></div>
+    <div class="nav-actions">
+      <button class="btn btn-sm btn-ghost" onclick="openModal('client')">Je suis client</button>
+      <button class="btn btn-sm btn-primary" onclick="openModal('pro')">Je suis artisan</button>
+    </div>
+  </div>
+</nav>
+
+<!-- FLOATING CTAs (shown when nav hidden) -->
+<div class="float-cta" id="float-cta">
+  <button class="btn btn-md btn-ghost" style="background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.15)" onclick="openModal('client')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>Je suis </span>client
+  </button>
+  <button class="btn btn-md btn-accent" onclick="openModal('pro')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+    <span>Je suis </span>artisan
+  </button>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-dot"></span>
+        Bientôt à Paris · Inscription en avant-première
+      </div>
+      <h1>Le bon artisan,<br><em>au bon moment.</em></h1>
+      <p class="hero-lead">
+        <strong>Plomberie, électricité, serrurerie.</strong> Devis reçu en moins d'une heure, paiement sécurisé, facture automatique. <strong>Une plateforme pensée pour la confiance.</strong>
+      </p>
+
+      <form class="hero-form" onsubmit="submitEmail(event,'client')">
+        <div class="email-form">
+          <input type="email" name="email" placeholder="Votre adresse email" required>
+          <button type="submit" class="btn btn-lg btn-accent">Rejoindre →</button>
+        </div>
+      </form>
+
+      <div class="hero-trust">
+        <div class="hero-trust-item"><span class="hero-trust-check"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#2F8F6E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Gratuit</div>
+        <div class="hero-trust-item"><span class="hero-trust-check"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#2F8F6E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Sans engagement</div>
+        <div class="hero-trust-item"><span class="hero-trust-check"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#2F8F6E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Accès prioritaire</div>
+      </div>
+
+      <div class="hero-counter">
+        <div class="hero-counter-avatars">
+          <div class="hero-counter-avatar" style="background:#3730A3">JL</div>
+          <div class="hero-counter-avatar" style="background:#E07856">AM</div>
+          <div class="hero-counter-avatar" style="background:#2F8F6E">NR</div>
+          <div class="hero-counter-avatar" style="background:#D4A03E">PV</div>
+        </div>
+        <span><strong id="counter">1 247</strong> personnes déjà inscrites cette semaine</span>
+      </div>
+    </div>
+
+    <!-- App preview removed -->
+  </div>
+</section>
+
+<!-- PROMISES (replaces pain/solution) -->
+<section class="pain-solution reveal" style="padding-top:60px;padding-bottom:60px">
+  <div class="container">
+    <div class="section-head">
+      <div class="tag">Nos engagements</div>
+      <h2>Quatre promesses simples.<br>Tenues, à chaque intervention.</h2>
+      <p class="lead">Faire entrer un professionnel chez soi demande de la confiance. MendPlace transforme cette confiance en garanties concrètes.</p>
+    </div>
+
+    <div class="promises">
+      <div class="promise">
+        <div class="promise-num">01</div>
+        <div class="promise-content">
+          <h3>Une réponse en moins d'une heure</h3>
+          <p>Dès la publication de votre demande, un professionnel vérifié et disponible vous transmet un devis. Vous restez maître du temps, sans attente, sans relance.</p>
+        </div>
+      </div>
+      <div class="promise">
+        <div class="promise-num">02</div>
+        <div class="promise-content">
+          <h3>Un devis clair, en amont</h3>
+          <p>Tarifs détaillés, prestations précisées, conditions transparentes. Le montant est connu et accepté avant toute intervention.</p>
+        </div>
+      </div>
+      <div class="promise">
+        <div class="promise-num">03</div>
+        <div class="promise-content">
+          <h3>Un créneau précis, pas une plage</h3>
+          <p>Rendez-vous à l'heure choisie. Confirmation par notification, suivi de l'arrivée en temps réel. Votre temps n'attend pas.</p>
+        </div>
+      </div>
+      <div class="promise">
+        <div class="promise-num">04</div>
+        <div class="promise-content">
+          <h3>Un paiement protégé</h3>
+          <p>Le règlement est conservé sur un compte séquestre, libéré après votre validation. Facture automatique, garantie 30 jours sur l'intervention.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="reveal">
+  <div class="container">
+    <div class="section-head">
+      <div class="tag">En 3 étapes</div>
+      <h2>Simple. Précis. Sans détour.</h2>
+      <p class="lead">De la demande au paiement, tout passe par l'app. Pas d'appels, pas de négo, pas de surprise.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-ico">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3730A3" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3>Tu décris ton besoin.</h3>
+        <p>Type d'intervention, photos, disponibilités. Quelques mots suffisent. Aucun formulaire complexe.</p>
+        <span class="step-time">⏱ 2 min</span>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-ico" style="background:var(--t50)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B5532E" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+        </div>
+        <h3>Un professionnel répond.</h3>
+        <p>Un artisan vérifié t'envoie un devis détaillé. Tu valides en un clic, le paiement est sécurisé.</p>
+        <span class="step-time" style="background:var(--t50);color:var(--t700)">⏱ ~30 min</span>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-ico" style="background:var(--okBg)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E5C46" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h3>Intervention. Validation. Facture.</h3>
+        <p>Le professionnel intervient. Tu confirmes la mission dans l'app. Le paiement est libéré, la facture est envoyée.</p>
+        <span class="step-time" style="background:var(--okBg);color:var(--okDk)">✓ Tout en règle</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTISANS -->
+<section class="dark reveal" id="pro-section">
+  <div class="container">
+    <div class="section-head">
+      <div class="tag">Pour les artisans</div>
+      <h2>Tu poses les outils.<br>On s'occupe du reste.</h2>
+      <p class="lead">Devis, calendrier, factures, paiements. Le commercial, on s'en charge. Toi, tu fais ce que tu sais faire : intervenir.</p>
+    </div>
+
+    <div class="pro-grid">
+      <div class="pro-card">
+        <div class="pro-ico">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="pro-stat">0€</div>
+        <h3>Zéro impayé. Jamais.</h3>
+        <p>Le client paie avant que tu commences. L'argent est sécurisé. Tu interviens, tu es payé.</p>
+      </div>
+      <div class="pro-card">
+        <div class="pro-ico">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div class="pro-stat">Inclus</div>
+        <h3>Devis, planning, facture.</h3>
+        <p>Tous les outils pro inclus, sans abonnement. Tu ne paies qu'à la mission réalisée.</p>
+      </div>
+      <div class="pro-card">
+        <div class="pro-ico">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="pro-stat">≤ 300€</div>
+        <h3>Plafond par mission.</h3>
+        <p>Commissions dégressives, jamais plus de 300€ prélevés par intervention. Point.</p>
+      </div>
+    </div>
+
+    <div class="pro-cta">
+      <button class="btn btn-xl btn-accent" onclick="openModal('pro')">Je veux rejoindre MendPlace →</button>
+      <div style="margin-top:14px;font-size:13px;color:rgba(255,255,255,0.55)">Accès prioritaire au lancement · Aucun engagement</div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="reveal" style="background:#fff">
+  <div class="container">
+    <div class="section-head">
+      <div class="tag">Pourquoi nous</div>
+      <h2>Sérieux. Sécurisé.<br>Sans faux semblants.</h2>
+    </div>
+    <div class="trust-grid">
+      <div class="trust-card">
+        <div class="trust-ico" style="background:var(--i50)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3730A3" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div>
+          <h3>Pros vérifiés</h3>
+          <p>Identité, assurance décennale, qualifications, avis clients. Aucun pro non-vérifié sur la plateforme.</p>
+        </div>
+      </div>
+      <div class="trust-card">
+        <div class="trust-ico" style="background:var(--okBg)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E5C46" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div>
+          <h3>Paiement escrow</h3>
+          <p>L'argent reste bloqué jusqu'à la fin de l'intervention. Tu ne paies que ce qui a été fait. Garantie 30 jours.</p>
+        </div>
+      </div>
+      <div class="trust-card">
+        <div class="trust-ico" style="background:#FAF1DD">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7A5A1A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <div>
+          <h3>Avis vérifiés</h3>
+          <p>Un avis = une intervention réelle. Pas de faux avis, pas d'avis achetés, pas de copinage.</p>
+        </div>
+      </div>
+      <div class="trust-card">
+        <div class="trust-ico" style="background:var(--t50)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B5532E" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        </div>
+        <div>
+          <h3>iOS, Android, Web</h3>
+          <p>Suivi en temps réel, messagerie, factures dispos partout. Et quand tu en as besoin.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="reveal">
+  <div class="container">
+    <div class="section-head">
+      <div class="tag">FAQ</div>
+      <h2>Questions fréquentes</h2>
+    </div>
+    <div class="faq" id="faq-list"></div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="container">
+    <h2>Soyez parmi les premiers<br>à rejoindre MendPlace.</h2>
+    <p class="lead">Accès prioritaire au lancement. Et 30€ offerts sur ta première intervention.</p>
+    <form class="hero-form" onsubmit="submitEmail(event,'client')" style="max-width:440px">
+      <div class="email-form">
+        <input type="email" name="email" placeholder="Votre adresse email" required>
+        <button type="submit" class="btn btn-lg btn-accent">Rejoindre →</button>
+      </div>
+    </form>
+    <div class="final-cta-counter">Déjà <strong id="counter2">1 247</strong> personnes inscrites · Lancement Q3 2026 à Paris</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <img src="../../assets/Logo_MendPlace_White.png" alt="MendPlace">
+        <span>© 2026 MendPlace · Paris</span>
+      </div>
+      <div class="footer-links">
+        <a href="#">Mentions légales</a>
+        <a href="#">Confidentialité</a>
+        <a href="mailto:hello@mendplace.fr">Contact</a>
+      </div>
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a href="#" aria-label="LinkedIn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        <a href="#" aria-label="TikTok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg></a>
+      </div>
+    </div>
+    <div class="rgpd">En vous inscrivant, vous acceptez de recevoir des communications de MendPlace. Vous pouvez vous désabonner à tout moment.</div>
+  </div>
+</footer>
+
+<!-- MODAL — Questionnaire -->
+<div class="modal-bg" id="modal">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div style="flex:1;padding-right:14px">
+        <div class="modal-progress" id="modal-progress"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()" aria-label="Fermer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer" id="modal-footer"></div>
+  </div>
+</div>
+
+<script>
+/* ── FAQ accordion ── */
+const faqs=[
+  {q:"Quand MendPlace sera-t-il disponible ?",a:"Lancement prévu Q3 2026 à Paris. La waitlist a un accès prioritaire et 30€ offerts sur la première intervention."},
+  {q:"Comment je sais que le pro est sérieux ?",a:"Identité, assurance décennale, qualifications RGE, casier — tout est vérifié avant qu'un pro accède à la plateforme. Et tu vois les vrais avis des vrais clients."},
+  {q:"Et si l'intervention est ratée ?",a:"L'argent reste bloqué tant que tu n'as pas validé. Mission ratée = pas de paiement libéré, et notre garantie 30 jours couvre les défauts."},
+  {q:"C'est combien ?",a:"L'app est gratuite pour les clients. Les frais de service sont affichés clairement sur chaque devis avant validation — pas de surprise."},
+  {q:"Quels métiers, quelles zones ?",a:"On lance avec plombiers, électriciens, serruriers à Paris. D'autres métiers et villes suivront selon la demande de la waitlist."},
+  {q:"Je suis artisan, qu'est-ce que je paie ?",a:"Rien à l'inscription. Aucun abonnement. Tu paies une commission sur les missions facturées — plafonnée à 300€ par intervention. Et tu es toujours payé en premier."},
+];
+const list=document.getElementById('faq-list');
+faqs.forEach(f=>{
+  const item=document.createElement('div');
+  item.className='faq-item';
+  item.innerHTML=`<button class="faq-q"><span>${f.q}</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B8AFA0" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-a">${f.a}</div>`;
+  item.querySelector('.faq-q').addEventListener('click',()=>item.classList.toggle('open'));
+  list.appendChild(item);
+});
+
+/* ── Nav hide on scroll down + show floating CTAs ── */
+let lastScroll=0;
+const nav=document.getElementById('nav');
+const floatCta=document.getElementById('float-cta');
+window.addEventListener('scroll',()=>{
+  const y=window.scrollY;
+  if(y>300&&y>lastScroll){
+    nav.classList.add('hidden');
+    floatCta.classList.add('show');
+  }else if(y<lastScroll||y<200){
+    nav.classList.remove('hidden');
+    if(y<400)floatCta.classList.remove('show');
+  }
+  lastScroll=y;
+},{passive:true});
+
+/* ── Reveal ── */
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}}),{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+/* ── Counter ── */
+const ctr=document.getElementById('counter'),ctr2=document.getElementById('counter2');
+let n=parseInt(localStorage.getItem('mp_count')||'1247');
+if(!sessionStorage.getItem('mp_seen')){n+=1;localStorage.setItem('mp_count',n);sessionStorage.setItem('mp_seen','1');}
+if(ctr)ctr.textContent=n.toLocaleString('fr-FR');
+if(ctr2)ctr2.textContent=n.toLocaleString('fr-FR');
+
+/* ── Modal questionnaire ── */
+const surveys={
+  client:{
+    title:"Aide-nous à construire l'app qui te facilite vraiment la vie.",
+    subtitle:"3 minutes. 5 questions. Tu nous aides à prioriser les fonctionnalités qui comptent pour toi.",
+    steps:[
+      {q:"Quel est le métier dont tu as eu le plus besoin récemment ?",type:"single",options:["Plomberie","Électricité","Serrurerie","Peinture","Plusieurs métiers","Autre"]},
+      {q:"Combien de fois par an fais-tu appel à un artisan ?",type:"single",options:["1 à 2 fois","3 à 5 fois","Plus de 5 fois","Jamais avant, mais bientôt"]},
+      {q:"Qu'est-ce qui te bloque le plus avec les artisans aujourd'hui ?",type:"multi",options:["Trouver quelqu'un de fiable","Comparer les devis","Prendre RDV rapidement","Être sûr du prix final","Payer en sécurité","Récupérer une facture"]},
+      {q:"Tu paierais plus cher pour quoi ?",type:"multi",options:["Une intervention en moins d'1h","Une garantie 1 an","Un pro noté 5★","Un créneau précis (pas une plage)","Aucun de ces choix"]},
+      {q:"Une fonctionnalité qui te ferait dire \"enfin\" ?",type:"text",placeholder:"Ex: voir le pro arriver en temps réel sur une carte…"},
+    ]
+  },
+  pro:{
+    title:"Aide-nous à construire l'outil qui te fait gagner du temps.",
+    subtitle:"3 minutes. 5 questions. On veut que MendPlace soit l'app que tu aurais dû avoir depuis 10 ans.",
+    steps:[
+      {q:"Quel est ton métier principal ?",type:"single",options:["Plombier","Électricien","Serrurier","Chauffagiste","Multi-métiers","Autre"]},
+      {q:"Combien d'années d'expérience ?",type:"single",options:["< 2 ans","2 à 5 ans","5 à 10 ans","Plus de 10 ans"]},
+      {q:"Ton plus gros problème quotidien ?",type:"multi",options:["Trouver des clients","Faire des devis","Relancer des impayés","Gérer le planning","Gérer la compta","Trouver un remplaçant"]},
+      {q:"Tu utilises quoi aujourd'hui pour ton activité ?",type:"multi",options:["Rien, tout sur papier","WhatsApp / SMS","Tableur Excel","Logiciel devis/facture","Une autre app artisan"]},
+      {q:"Une fonctionnalité indispensable pour toi ?",type:"text",placeholder:"Ex: optimisation de tournée, signature de devis sur place…"},
+    ]
+  }
+};
+
+let modalMode='client',modalStep=0,modalAnswers={},modalEmail='';
+
+function openModal(mode,prefillEmail){
+  modalMode=mode;
+  modalStep=0;
+  modalAnswers={};
+  modalEmail=prefillEmail||'';
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow='hidden';
+  renderModal();
+}
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
+
+function renderModal(){
+  const survey=surveys[modalMode];
+  const total=survey.steps.length+1; // +1 for email step
+  const body=document.getElementById('modal-body');
+  const footer=document.getElementById('modal-footer');
+  const prog=document.getElementById('modal-progress');
+
+  // Progress dots
+  prog.innerHTML='';
+  for(let i=0;i<total;i++){
+    const d=document.createElement('div');
+    d.className='modal-progress-step'+(i<modalStep?' done':i===modalStep?' active':'');
+    prog.appendChild(d);
+  }
+
+  // Email step (step 0)
+  if(modalStep===0){
+    body.innerHTML=`
+      <h3 class="modal-title">${survey.title}</h3>
+      <p class="modal-subtitle">${survey.subtitle}</p>
+      <div class="modal-question">
+        <label class="modal-question-label">Ton email pour qu'on te tienne au courant</label>
+        <input type="email" id="modal-email" placeholder="ton@email.fr" value="${modalEmail}" autofocus>
+      </div>
+    `;
+    footer.innerHTML=`
+      <span class="modal-step-hint">Étape 1 / ${total} · 30s</span>
+      <button class="btn btn-md btn-primary" id="modal-next">Continuer →</button>
+    `;
+    document.getElementById('modal-next').onclick=()=>{
+      const e=document.getElementById('modal-email').value.trim();
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)){alert('Email invalide');return;}
+      modalEmail=e;
+      modalAnswers.email=e;
+      modalStep++;
+      renderModal();
+    };
+    return;
+  }
+
+  // Survey steps
+  if(modalStep>=1&&modalStep<=survey.steps.length){
+    const idx=modalStep-1;
+    const step=survey.steps[idx];
+    const ans=modalAnswers[`q${idx}`]||(step.type==='multi'?[]:'');
+    let optsHtml='';
+    if(step.type==='single'||step.type==='multi'){
+      optsHtml=`<div class="opt-grid">${step.options.map(o=>{
+        const sel=step.type==='multi'?ans.includes(o):ans===o;
+        return `<button class="opt ${sel?'selected':''}" data-opt="${o}">${o}<span class="check">${sel?'<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>':''}</span></button>`;
+      }).join('')}</div>`;
+    }else if(step.type==='text'){
+      optsHtml=`<textarea id="modal-text" placeholder="${step.placeholder||''}">${ans||''}</textarea>`;
+    }
+    body.innerHTML=`
+      <h3 class="modal-title">Question ${modalStep} sur ${survey.steps.length}</h3>
+      <div class="modal-question">
+        <label class="modal-question-label">${step.q}${step.type==='multi'?' <span style="color:var(--s400);font-weight:400;font-size:12px">(plusieurs choix possibles)</span>':''}</label>
+        ${optsHtml}
+      </div>
+    `;
+    footer.innerHTML=`
+      <button class="btn btn-md btn-ghost" id="modal-back">← Retour</button>
+      <span class="modal-step-hint">Étape ${modalStep+1} / ${total}</span>
+      <button class="btn btn-md btn-primary" id="modal-next">${modalStep===survey.steps.length?'Terminer ✓':'Continuer →'}</button>
+    `;
+    // Bind options
+    if(step.type==='single'){
+      body.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+        modalAnswers[`q${idx}`]=b.dataset.opt;
+        renderModal();
+      });
+    }else if(step.type==='multi'){
+      body.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+        const cur=modalAnswers[`q${idx}`]||[];
+        const o=b.dataset.opt;
+        modalAnswers[`q${idx}`]=cur.includes(o)?cur.filter(x=>x!==o):[...cur,o];
+        renderModal();
+      });
+    }
+    document.getElementById('modal-back').onclick=()=>{modalStep--;renderModal();};
+    document.getElementById('modal-next').onclick=()=>{
+      if(step.type==='text'){modalAnswers[`q${idx}`]=document.getElementById('modal-text').value.trim();}
+      if(modalStep===survey.steps.length){
+        console.log('SUBMIT',modalMode,modalAnswers);
+        // TODO: POST to Tally.so / Brevo here
+        modalStep++;
+        renderModal();
+      }else{
+        modalStep++;
+        renderModal();
+      }
+    };
+    return;
+  }
+
+  // Success
+  body.innerHTML=`
+    <div class="success-screen">
+      <div class="success-circle">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2F8F6E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3>Merci ! C'est noté.</h3>
+      <p>Tes réponses nous aident à construire l'app qui te correspond vraiment. Tu seras parmi les premiers prévenus au lancement — et tu as <strong style="color:var(--t500)">30€ offerts</strong> sur ta première ${modalMode==='client'?'intervention':'commission'}.</p>
+      <div style="margin-top:20px;padding:14px 18px;background:var(--i50);border-radius:11px;font-size:13px;color:var(--i700);text-align:left">
+        <strong>Et après ?</strong> On t'envoie un email avec le lancement officiel, l'accès prioritaire, et une question rapide une fois par mois pour t'impliquer dans la construction.
+      </div>
+    </div>
+  `;
+  footer.innerHTML=`
+    <span class="modal-step-hint" style="flex:1">Position waitlist : <strong style="color:var(--i700)">#${Math.max(1,n-50)+Math.floor(Math.random()*40)}</strong></span>
+    <button class="btn btn-md btn-primary" onclick="closeModal()">Fermer</button>
+  `;
+}
+
+/* ── Email submit (opens modal pre-filled) ── */
+function submitEmail(e,mode){
+  e.preventDefault();
+  const email=e.target.querySelector('input[type=email]').value;
+  openModal(mode,email);
+  // Pre-skip email step since they already gave it
+  modalAnswers.email=email;
+  modalStep=1;
+  renderModal();
+}
+</script>
+
+</body>
+</html>

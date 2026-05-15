@@ -1,0 +1,20 @@
+{
+  "name": "MendPlace",
+  "short_name": "MendPlace",
+  "description": "Plombier, Électricien, Serrurier vérifié à Paris — Devis en 1h",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FAF8F4",
+  "theme_color": "#FAF8F4",
+  "lang": "fr",
+  "categories": ["utilities", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
