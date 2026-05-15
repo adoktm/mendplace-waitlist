@@ -8,7 +8,8 @@ interface Props {
 }
 
 export function EmailForm({ onSubmit, dark = false }: Props) {
-  const [email, setEmail] = useState('');
+  const [email, setEmail]     = useState('');
+  const [focused, setFocused] = useState(false);
   const { width } = useWindowDimensions();
   const stacked = width < 500;
 
@@ -24,7 +25,12 @@ export function EmailForm({ onSubmit, dark = false }: Props) {
 
   return (
     <View
-      style={[styles.form, dark && styles.formDark, stacked && styles.formStacked]}
+      style={[
+        styles.form,
+        dark && styles.formDark,
+        stacked && styles.formStacked,
+        focused && (dark ? styles.formFocusedDark : styles.formFocused),
+      ]}
       accessibilityRole="none"
     >
       <TextInput
@@ -34,6 +40,8 @@ export function EmailForm({ onSubmit, dark = false }: Props) {
         placeholderTextColor={dark ? 'rgba(255,255,255,0.45)' : C.sand400}
         value={email}
         onChangeText={setEmail}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
         keyboardType="email-address"
         autoCapitalize="none"
         autoCorrect={false}
@@ -69,6 +77,12 @@ const styles = StyleSheet.create({
   formDark: {
     backgroundColor: 'rgba(255,255,255,0.06)',
     borderColor: 'rgba(255,255,255,0.15)',
+  },
+  formFocused: {
+    borderColor: C.indigo700,
+  },
+  formFocusedDark: {
+    borderColor: 'rgba(255,255,255,0.55)',
   },
   formStacked: {
     flexDirection: 'column',

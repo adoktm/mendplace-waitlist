@@ -147,6 +147,7 @@ export function WaitlistModal({ visible, mode, prefillEmail, onClose, onSuccess 
   const [lastName, setLastName]   = useState('');
   const [honeypot, setHoneypot]   = useState('');
   const [answers, setAnswers]     = useState<Record<string, string | string[]>>({});
+  const [submitting, setSubmitting] = useState(false);
   const openedAt = useRef<number>(0);
 
   useEffect(() => {
@@ -165,7 +166,7 @@ export function WaitlistModal({ visible, mode, prefillEmail, onClose, onSuccess 
   const checkRateLimit = (): boolean => true;
   const markRateLimit = () => {};
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step === 0) {
       if (honeypot.length > 0) return;
       if (Date.now() - openedAt.current < 3000) return;
@@ -183,8 +184,8 @@ export function WaitlistModal({ visible, mode, prefillEmail, onClose, onSuccess 
       return;
     }
     if (step === survey.steps.length) {
-      markRateLimit();
-      submitWaitlist({
+      setSubmitting(true);
+      const result = await submitWaitlist({
         mode:       mode as 'client' | 'pro',
         first_name: (answers.firstName as string) ?? '',
         last_name:  (answers.lastName  as string) ?? '',
@@ -195,6 +196,19 @@ export function WaitlistModal({ visible, mode, prefillEmail, onClose, onSuccess 
         q4:         (answers.q3 as string) ?? null,
         message:    (answers.q4 as string) || null,
       });
+      setSubmitting(false);
+      if (result === 'duplicate') {
+        Alert.alert(
+          'Déjà inscrit(e) !',
+          'Cette adresse email est déjà sur notre liste. On vous contactera au lancement 🎉'
+        );
+        return;
+      }
+      if (result === 'error') {
+        Alert.alert('Erreur', 'Une erreur est survenue. Veuillez réessayer.');
+        return;
+      }
+      markRateLimit();
       const fn = ((answers.firstName as string) || firstName).trim();
       const ln = ((answers.lastName  as string) || lastName).trim();
       onSuccess?.((fn[0] || '?').toUpperCase() + (ln[0] || '?').toUpperCase());
@@ -478,15 +492,15 @@ export function WaitlistModal({ visible, mode, prefillEmail, onClose, onSuccess 
                       <Text style={styles.stepHint} accessibilityElementsHidden>Étape {step + 1} / {total}</Text>
                     )}
                     <TouchableOpacity
-                      style={[styles.btnPrimary, !canContinue && styles.btnDisabled]}
-                      onPress={canContinue ? handleNext : undefined}
-                      activeOpacity={canContinue ? 0.85 : 1}
+                      style={[styles.btnPrimary, (!canContinue || submitting) && styles.btnDisabled]}
+                      onPress={canContinue && !submitting ? handleNext : undefined}
+                      activeOpacity={canContinue && !submitting ? 0.85 : 1}
                       accessibilityRole="button"
                       accessibilityLabel={step === survey.steps.length ? 'Terminer et envoyer' : 'Continuer à l\'étape suivante'}
-                      accessibilityState={{ disabled: !canContinue }}
+                      accessibilityState={{ disabled: !canContinue || submitting }}
                     >
                       <Text style={styles.btnPrimaryTxt}>
-                        {step === survey.steps.length ? 'Terminer ✓' : 'Continuer →'}
+                        {submitting ? 'Envoi...' : step === survey.steps.length ? 'Terminer ✓' : 'Continuer →'}
                       </Text>
                     </TouchableOpacity>
                   </>

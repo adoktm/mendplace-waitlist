@@ -48,6 +48,9 @@ export interface WaitlistRow {
  *  CREATE POLICY "allow_insert" ON waitlist
  *    FOR INSERT TO anon WITH CHECK (true);
  *
+ *  -- Empêche un même email de s'inscrire deux fois pour le même mode
+ *  ALTER TABLE waitlist ADD CONSTRAINT waitlist_email_mode_unique UNIQUE (email, mode);
+ *
  *  -- Fonction publique : retourne uniquement le total et les initiales (pas de données sensibles)
  *  CREATE OR REPLACE FUNCTION get_waitlist_stats()
  *  RETURNS json
@@ -72,10 +75,15 @@ export interface WaitlistRow {
  *
  * ───────────────────────────────────────────────────────────────────────── */
 
-export async function submitWaitlist(row: WaitlistRow): Promise<void> {
-  if (!supabaseUrl || supabaseUrl.startsWith('REMPLACE')) return;
+export type SubmitResult = 'ok' | 'duplicate' | 'error';
+
+export async function submitWaitlist(row: WaitlistRow): Promise<SubmitResult> {
+  if (!supabaseUrl || supabaseUrl.startsWith('REMPLACE')) return 'ok';
   const { error } = await supabase.from('waitlist').insert(row);
-  if (error) console.error('[Supabase] Erreur insertion :', error.message);
+  if (!error) return 'ok';
+  if (error.code === '23505') return 'duplicate'; // UNIQUE violation
+  console.error('[Supabase] Erreur insertion :', error.message);
+  return 'error';
 }
 
 export async function fetchWaitlistStats(): Promise<{ count: number; lastFour: string[] }> {

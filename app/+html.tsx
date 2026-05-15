@@ -374,6 +374,8 @@ export default function Root({ children }: PropsWithChildren) {
           input, textarea {
             user-select: text;
             -webkit-user-select: text;
+            /* Prevent iOS from zooming in when tapping inputs (requires font-size >= 16px) */
+            font-size: 16px !important;
           }
 
           /* Neutralise browser autofill blue/yellow highlight */
@@ -395,11 +397,16 @@ export default function Root({ children }: PropsWithChildren) {
             -webkit-text-fill-color: white !important;
           }
 
-          /* Visible focus ring for keyboard users */
+          /* Inputs: outline supprimé — le conteneur gère le focus visuellement */
+          input:focus, input:focus-visible {
+            outline: none !important;
+            box-shadow: none !important;
+          }
+
+          /* Boutons et autres éléments focusables — anneau arrondi */
           :focus-visible {
             outline: 3px solid #3730A3;
-            outline-offset: 2px;
-            border-radius: 4px;
+            outline-offset: 3px;
           }
 
           /* Skip-to-content link (appears on Tab) */
